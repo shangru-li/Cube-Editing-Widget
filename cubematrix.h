@@ -2,11 +2,12 @@
 #define CUBEMATRIX_H
 
 #include "drawable.h"
-#include "cube.h"
+#include "sketchcube.h"
 #define SIZE 0.5f
 #define MAT_SIZE_X 15
 #define MAT_SIZE_Y 15
 #define MAT_SIZE_Z 15
+using CubeItem = std::array<int, 4>;
 class CubeMatrix: public Drawable
 {
 public:
@@ -21,16 +22,20 @@ public:
 
     CubeMatrix(CubeContext *context);
     void createGeometry();
-    glm::mat4 getModel();
 
     void addCube(glm::vec3 position, glm::vec4 color);
+    void deleteCube(glm::vec3 position);
 
-    std::array<std::array<int, 4>, 200> matrix;
-    std::array<int, 4> &operator() (int x, int y, int z);
-    std::array<int, 4> &operator() (glm::vec3 position);
+    std::vector<CubeItem> matrix;
+    CubeItem &operator() (int x, int y, int z);
+    CubeItem &operator() (glm::vec3 position);
     bool isEmptyCube(int i) { return matrix.at(i).at(3) == 0; }
 
     inline static isBlack(glm::vec3 color) { return glm::vec4{color, 1} == _black; }
+    inline static bool isInBoundX(int x) { return x >= 0 && x < MAT_SIZE_X; }
+    inline static bool isInBoundY(int x) { return x >= 0 && x < MAT_SIZE_Y; }
+    inline static bool isInBoundZ(int x) { return x >= 0 && x < MAT_SIZE_Z; }
+
 private:
     void addColoredCube(glm::mat4 transform, glm::vec4 color);
     inline static int getCoords(glm::vec3 v)

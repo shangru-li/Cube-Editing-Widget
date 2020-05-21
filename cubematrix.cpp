@@ -9,7 +9,13 @@ glm::vec4 CubeMatrix::p5{SIZE, -SIZE, SIZE, 1};
 glm::vec4 CubeMatrix::p6{SIZE, SIZE, -SIZE, 1};
 glm::vec4 CubeMatrix::p7{SIZE, SIZE, SIZE, 1};
 
-CubeMatrix::CubeMatrix(CubeContext *context): Drawable(context) {}
+CubeMatrix::CubeMatrix(CubeContext *context): Drawable(context)
+{
+    matrix = std::vector<CubeItem>(MAT_SIZE_X * MAT_SIZE_Y * MAT_SIZE_Z);
+    for (CubeItem &item: matrix)
+        for (int &i: item)
+            i = 0;
+}
 
 void CubeMatrix::createGeometry()
 {
@@ -21,14 +27,11 @@ void CubeMatrix::createGeometry()
         if (!isEmptyCube(i))
         {
             glm::vec3 coords = getCoords(i);
-            addColoredCube(glm::translate(glm::mat4(1.f), coords), _blue);
+            CubeItem item = matrix.at(i);
+            glm::vec4 color(item.at(0) / 255.f, item.at(1) / 255.f, item.at(2) / 255.f, item.at(3));
+            addColoredCube(glm::translate(glm::mat4(1.f), coords), color);
         }
     }
-}
-
-glm::mat4 CubeMatrix::getModel()
-{
-    return glm::translate(glm::mat4(1.f), glm::vec3(-MAT_SIZE_X / 2.f, -MAT_SIZE_Y / 2.f, -MAT_SIZE_Z / 2.f));
 }
 
 
@@ -41,13 +44,18 @@ void CubeMatrix::addCube(glm::vec3 position, glm::vec4 color)
     item.at(3) = 1;
 }
 
+void CubeMatrix::deleteCube(glm::vec3 position)
+{
+    std::array<int, 4> &item = matrix.at(getCoords(position));
+    item.at(3) = 0;
+}
 
-std::array<int, 4> &CubeMatrix::operator()(int x, int y, int z)
+CubeItem &CubeMatrix::operator()(int x, int y, int z)
 {
     return matrix.at(getCoords(glm::vec3(x, y, z)));
 }
 
-std::array<int, 4> &CubeMatrix::operator()(glm::vec3 position)
+CubeItem &CubeMatrix::operator()(glm::vec3 position)
 {
     return matrix.at(getCoords(position));
 }

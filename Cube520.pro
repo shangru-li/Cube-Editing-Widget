@@ -33,7 +33,7 @@ SOURCES += \
     shaderprogram.cpp \
     drawable.cpp \
     cubematrix.cpp \
-    cube.cpp
+    sketchcube.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,7 +43,7 @@ HEADERS += \
     shaderprogram.h \
     drawable.h \
     cubematrix.h \
-    cube.h
+    sketchcube.h
 
 FORMS += \
         mainwindow.ui
