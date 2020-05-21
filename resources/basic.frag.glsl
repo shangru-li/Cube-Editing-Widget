@@ -15,8 +15,8 @@ void main()
     float specularIntensity = max(pow(dot(fs_LightVector, fs_Normal), blinnExp), 0);
     float specularTerm = specularIntensity * 10;
     specularTerm = clamp(specularTerm, 0, 1);
-
-    float ambientTerm = 0.2;
+    specularTerm = 0; // lambert
+    float ambientTerm = 0.7;
 
     out_Color = vec3(fs_Color * (diffuseTerm + specularTerm + ambientTerm));
     //out_Color = fs_Color;

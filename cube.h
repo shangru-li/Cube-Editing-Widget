@@ -4,8 +4,9 @@
 class Cube
 {
 public:
-    Cube(glm::mat4 transform);
-    glm::mat4 transform;
+    Cube();
+    float r, g, b;
+    bool isEmpty;
 };
 
 #endif // CUBE_H

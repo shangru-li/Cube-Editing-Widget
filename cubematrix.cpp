@@ -15,13 +15,46 @@ void CubeMatrix::createGeometry()
 {
     vertexBuffer.clear();
     indexBuffer.clear();
-    addColoredCube(_blue);
+
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        if (!isEmptyCube(i))
+        {
+            glm::vec3 coords = getCoords(i);
+            addColoredCube(glm::translate(glm::mat4(1.f), coords), _blue);
+        }
+    }
 }
 
-void CubeMatrix::addColoredCube(glm::vec4 color)
+glm::mat4 CubeMatrix::getModel()
+{
+    return glm::translate(glm::mat4(1.f), glm::vec3(-MAT_SIZE_X / 2.f, -MAT_SIZE_Y / 2.f, -MAT_SIZE_Z / 2.f));
+}
+
+
+void CubeMatrix::addCube(glm::vec3 position, glm::vec4 color)
+{
+    std::array<int, 4> &item = matrix.at(getCoords(position));
+    item.at(0) = color.r;
+    item.at(1) = color.g;
+    item.at(2) = color.b;
+    item.at(3) = 1;
+}
+
+
+std::array<int, 4> &CubeMatrix::operator()(int x, int y, int z)
+{
+    return matrix.at(getCoords(glm::vec3(x, y, z)));
+}
+
+std::array<int, 4> &CubeMatrix::operator()(glm::vec3 position)
+{
+    return matrix.at(getCoords(position));
+}
+
+void CubeMatrix::addColoredCube(glm::mat4 transform, glm::vec4 color)
 {
     glm::vec4 n(0, 0, 1, 0);
-    glm::mat4 transform(1.f);
     std::vector<glm::vec4> v{transform * p0, color, n,
                 transform * p1, color, n,
                 transform * p2, color, n,

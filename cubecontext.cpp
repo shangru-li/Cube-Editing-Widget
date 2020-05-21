@@ -30,6 +30,8 @@ void CubeContext::initializeGL()
     shaderProgram.create(":/resources/basic.vert.glsl", ":/resources/basic.frag.glsl");
     shaderProgramFlat.create(":/resources/flat.vert.glsl", ":/resources/flat.frag.glsl");
     camera = std::make_unique<Camera>((float)width() / height(), 90.f, glm::vec3(0, 0, -5), glm::vec3(0, 0, 0));
+
+    //cubeMatrix.addCube(glm::vec3(7, 7, 7), _red);
 }
 
 void CubeContext::paintGL()
@@ -38,7 +40,7 @@ void CubeContext::paintGL()
 
     cubeMatrix.update();
     shaderProgram.setCamPos(glm::vec4(camera->eye, 1));
-    shaderProgram.setModelViewProj(camera->getViewProj());
+    shaderProgram.setModelViewProj(camera->getViewProj(), cubeMatrix.getModel());
     shaderProgram.draw(cubeMatrix);
 }
 
